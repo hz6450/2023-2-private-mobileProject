@@ -3,6 +3,7 @@ import { initializeApp, getApps } from "firebase/app";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { AuthContext } from "../provider/AuthProvider";
+import firebaseConfig from "../firebaseConfig"; // Firebase 설정 가져오기
 
 // Main
 import Home from "../screens/Home";
@@ -15,15 +16,6 @@ import ForgetPassword from "../screens/auth/ForgetPassword";
 
 import Loading from "../screens/utils/Loading";
 
-// Better put your these secret keys in .env file
-const firebaseConfig = {
-  apiKey: "AIzaSyDVdIf3cw-ApoOeM1vFSWmztwuAU1JZ3X0",
-  authDomain: "mp-42119.firebaseapp.com",
-  projectId: "mp-42119",
-  storageBucket: "mp-42119.appspot.com",
-  messagingSenderId: "364334395555",
-  appId: "1:364334395555:web:55085e4803b8790f0b4f16"
-};
 if (getApps().length === 0) {
   initializeApp(firebaseConfig);
 }
