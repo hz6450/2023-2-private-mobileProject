@@ -17,9 +17,6 @@ import ForgetPassword from "../screens/auth/ForgetPassword";
 
 import Loading from "../screens/utils/Loading";
 
-if (getApps().length === 0) {
-  initializeApp(firebaseConfig);
-}
 
 const AuthStack = createNativeStackNavigator();
 
