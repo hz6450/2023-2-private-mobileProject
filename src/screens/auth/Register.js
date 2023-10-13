@@ -7,6 +7,7 @@ import {
   Image,
 } from "react-native";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, collection, addDoc, doc, setDoc } from "firebase/firestore";
 import {
   Layout,
   Text,
@@ -19,22 +20,33 @@ import {
 export default function ({ navigation }) {
   const { isDarkmode, setTheme } = useTheme();
   const auth = getAuth();
+  const db = getFirestore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function register() {
+ async function register() {
     setLoading(true);
-    await createUserWithEmailAndPassword(auth, email, password).catch(function (
-      error
-    ) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // ...
+    try {
+      // Firebase 인증에서 사용자를 만들고 사용자 개체를 얻습니다.
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Firestore에 UID 저장
+      const userRef = doc(db, "users", user.uid);
+      await setDoc(userRef, {
+        email: user.email,
+        // 여기에 사용자 정보를 더 저장할 수 있습니다.
+      });
+
+      // 등록 성공
       setLoading(false);
-      alert(errorMessage);
-    });
+
+      // 여기에서 탐색 로직을 계속 진행할 수 있습니다.
+    } catch (error) {
+      setLoading(false);
+      alert(error.message);
+    }
   }
 
   return (

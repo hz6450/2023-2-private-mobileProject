@@ -1,35 +1,71 @@
-import React, { useState } from "react";
-import { View, TextInput, Button } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, TextInput, Button, Picker } from "react-native";
 import { Layout, TopNav, Text, themeColor, useTheme } from "react-native-rapi-ui";
 import { Ionicons } from "@expo/vector-icons";
 import { initializeApp, getApps } from "firebase/app";
-import { getFirestore, doc, setDoc, collection } from "firebase/firestore";
-import firebaseConfig from "../firebaseConfig"; // firebaseConfig.js 파일 가져오기
-import { Calendar } from "react-native-calendars"; // react-native-calendars 추가
+import { getFirestore, doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import firebaseConfig from "../firebaseConfig";
+import { Calendar } from "react-native-calendars";
 
 export default function ({ navigation }) {
-  // Firebase 앱 초기화
   if (getApps().length === 0) {
     initializeApp(firebaseConfig);
   }
-  // Firebase 앱 초기화
-  const app = getApps()[0]; // 이미 초기화된 Firebase 앱 가져오기
-  const db = getFirestore(app);
-  const dataCollection = collection(db, "data"); // 'data' 컬렉션 참조
 
-  const { isDarkmode, setTheme } = useTheme(); // isDarkmode와 setTheme 스테이트 추가
+  const app = getApps()[0];
+  const db = getFirestore(app);
+
+  const { isDarkmode, setTheme } = useTheme();
 
   const [selectedDate, setSelectedDate] = useState("");
   const [text, setText] = useState("");
+  const [selectedTime, setSelectedTime] = useState("00:00");
+
+  const [userUID, setUserUID] = useState("");
+  const [userData, setUserData] = useState([]);
+
+  // Firebase Authentication에서 사용자 UID 가져오기
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setUserUID(user.uid);
+    }
+  });
+
+  // 사용자 데이터를 가져오는 함수
+  const fetchUserData = async () => {
+    if (userUID && selectedDate) {
+      try {
+        const userDataRef = doc(db, "users", userUID);
+        const userDataDoc = await getDoc(userDataRef);
+
+        if (userDataDoc.exists()) {
+          const userData = userDataDoc.data();
+          setUserData(userData.data || []);
+        }
+      } catch (error) {
+        console.error("데이터 가져오기 중 오류 발생:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, [selectedDate]);
 
   const saveData = async () => {
-    if (selectedDate && text) {
+    if (userUID && selectedDate && text) {
       try {
-        // 컬렉션 참조를 사용하여 문서 추가
-        const dataRef = doc(dataCollection, selectedDate);
-        await setDoc(dataRef, {
-          value: text,
+        // Firestore에 데이터 저장
+        const userDataRef = doc(db, "users", userUID);
+        const updatedData = userData.slice();
+        updatedData.push({ date: selectedDate, time: selectedTime, value: text });
+
+        await updateDoc(userDataRef, {
+          data: updatedData,
         });
+
         console.log("데이터가 성공적으로 저장되었습니다.");
       } catch (error) {
         console.error("데이터 저장 중 오류 발생:", error);
@@ -37,10 +73,18 @@ export default function ({ navigation }) {
     }
   };
 
+  const getSelectedDateValues = () => {
+    if (userData && userData.length > 0 && selectedDate) {
+      const selectedData = userData.filter((item) => item.date === selectedDate);
+      return selectedData.map((item) => `Time: ${item.time}, Value: ${item.value}`).join("\n");
+    }
+    return "No data";
+  };
+
   return (
     <Layout>
       <TopNav
-        middleContent="Second Screen"
+        middleContent="오늘 할 일"
         leftContent={
           <Ionicons
             name="chevron-back"
@@ -65,12 +109,24 @@ export default function ({ navigation }) {
         }}
       />
 
-      {/* 캘린더 선택 (캘린더 컴포넌트를 추가하고 선택된 날짜를 setSelectedDate로 업데이트) */}
       <Calendar
         onDayPress={(day) => {
           setSelectedDate(day.dateString);
         }}
       />
+
+      <Picker
+        selectedValue={selectedTime}
+        onValueChange={(itemValue, itemIndex) => setSelectedTime(itemValue)}
+      >
+        {Array.from({ length: 49 }, (_, i) => (
+          <Picker.Item
+            key={i}
+            label={`${String(Math.floor(i / 2)).padStart(2, "0")}:${i % 2 === 0 ? "00" : "30"}`}
+            value={`${String(Math.floor(i / 2)).padStart(2, "0")}:${i % 2 === 0 ? "00" : "30"}`}
+          />
+        ))}
+      </Picker>
 
       <TextInput
         value={text}
@@ -83,6 +139,9 @@ export default function ({ navigation }) {
         onPress={saveData}
         disabled={!selectedDate || !text}
       />
+
+      {/* 사용자 데이터 출력 */}
+      <Text>{`오늘 할 일:\n${getSelectedDateValues()}`}</Text>
     </Layout>
   );
 }
