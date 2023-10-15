@@ -113,7 +113,6 @@ export default function ({ navigation }) {
         <TouchableOpacity onPress={handlePrevMonth}>
           <Text>{"< Previous"}</Text>
         </TouchableOpacity>
-        <Text>{format(currentMonth, "MMMM yyyy")}</Text>
         <TouchableOpacity onPress={handleNextMonth}>
           <Text>{"Next >"}</Text>
         </TouchableOpacity>

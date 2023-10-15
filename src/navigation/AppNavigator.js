@@ -9,6 +9,7 @@ import firebaseConfig from "../firebaseConfig";
 // Main
 import Home from "../screens/Home";
 import SecondScreen from "../screens/SecondScreen";
+import openAiScreen from "../screens/openAiScreen"
 
 // Auth screens
 import Login from "../screens/auth/Login";
@@ -45,6 +46,7 @@ const Main = () => {
     >
       <MainStack.Screen name="Home" component={Home} />
       <MainStack.Screen name="SecondScreen" component={SecondScreen} />
+      <MainStack.Screen name="openAiScreen" component={openAiScreen} />
     </MainStack.Navigator>
   );
 };
@@ -63,6 +65,7 @@ export default () => {
         <Drawer.Navigator initialRouteName="Home"> 
           <Drawer.Screen name="Home" component={Main} />
           <Drawer.Screen name="SecondScreen" component={SecondScreen} />
+          <Drawer.Screen name="openAiScreen" component={openAiScreen} />
         </Drawer.Navigator>
       )}
     </NavigationContainer>

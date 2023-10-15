@@ -49,9 +49,18 @@ export default function ({ navigation }) {
             </Text>
           
             <Button
-              text="Go to second screen"
+              text="캘린더 작성하기"
               onPress={() => {
                 navigation.navigate("SecondScreen");
+              }}
+              style={{
+                marginTop: 10,
+              }}
+            />
+              <Button
+              text="일정 관리하기"
+              onPress={() => {
+                navigation.navigate("openAiScreen");
               }}
               style={{
                 marginTop: 10,
