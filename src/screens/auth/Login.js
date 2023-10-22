@@ -12,12 +12,10 @@ import {
   Text,
   TextInput,
   Button,
-  useTheme,
-  themeColor,
 } from "react-native-rapi-ui";
 
 export default function ({ navigation }) {
-  const { isDarkmode, setTheme } = useTheme();
+
   const auth = getAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -50,7 +48,6 @@ export default function ({ navigation }) {
               flex: 1,
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: isDarkmode ? "#17171E" : themeColor.white100,
             }}
           >
             <Image
@@ -67,7 +64,6 @@ export default function ({ navigation }) {
               flex: 3,
               paddingHorizontal: 20,
               paddingBottom: 20,
-              backgroundColor: isDarkmode ? themeColor.dark : themeColor.white,
             }}
           >
             <Text
@@ -167,7 +163,6 @@ export default function ({ navigation }) {
             >
               <TouchableOpacity
                 onPress={() => {
-                  isDarkmode ? setTheme("light") : setTheme("dark");
                 }}
               >
                 <Text
@@ -177,7 +172,6 @@ export default function ({ navigation }) {
                     marginLeft: 5,
                   }}
                 >
-                  {isDarkmode ? "☀️ light theme" : "🌑 dark theme"}
                 </Text>
               </TouchableOpacity>
             </View>

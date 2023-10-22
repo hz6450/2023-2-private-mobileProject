@@ -8,25 +8,15 @@ import {
   TopNav,
   Section,
   SectionContent,
-  useTheme,
-  themeColor,
 } from "react-native-rapi-ui";
-import { Ionicons } from "@expo/vector-icons";
+
 
 export default function ({ navigation }) {
-  const { isDarkmode, setTheme } = useTheme();
   const auth = getAuth();
   return (
     <Layout>
       <TopNav
         middleContent="Home"
-        rightContent={
-          <Ionicons
-            name={isDarkmode ? "sunny" : "moon"}
-            size={20}
-            color={isDarkmode ? themeColor.white100 : themeColor.dark}
-          />
-        }
         rightAction={() => {
           if (isDarkmode) {
             setTheme("light");
@@ -45,13 +35,13 @@ export default function ({ navigation }) {
         <Section style={{ marginTop: 20 }}>
           <SectionContent>
             <Text fontWeight="bold" style={{ textAlign: "center" }}>
-              These UI components provided by Rapi UI
+              나만의 일정관리 앱
             </Text>
           
             <Button
               text="캘린더 작성하기"
               onPress={() => {
-                navigation.navigate("SecondScreen");
+                navigation.navigate("calander");
               }}
               style={{
                 marginTop: 10,

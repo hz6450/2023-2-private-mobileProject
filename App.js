@@ -3,8 +3,12 @@ import AppNavigator from "./src/navigation/AppNavigator";
 import { AuthProvider } from "./src/provider/AuthProvider";
 import { ThemeProvider } from "react-native-rapi-ui";
 import { LogBox } from "react-native";
+import { API_KEY } from "@env";
+
+
 
 export default function App(props) {
+  console.log(API_KEY);
   const images = [
     require("./assets/icon.png"),
     require("./assets/splash.png"),

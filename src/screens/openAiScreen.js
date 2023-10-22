@@ -62,6 +62,14 @@ export default function OpenAIScreen({ navigation }) {
       }
     }
   };
+
+  useEffect(() => {
+    // userUID가 설정되면 사용자 데이터를 즉시 불러옵니다.
+    if (userUID) {
+      fetchUserData();
+    }
+  }, [userUID]); // userUID가 변경될 때마다 이 훅을 실행합니다.
+
 useEffect(() => {
   const auth = getAuth();
 
@@ -100,8 +108,6 @@ const response = await generateOpenAIResponse(flattenedData);
         middleContent="일정 관리"
         leftContent={<Ionicons name="chevron-back" size={20} color={isDarkmode ? themeColor.white100 : themeColor.dark} />}
         leftAction={() => navigation.goBack()}
-        rightContent={<Ionicons name={isDarkmode ? "sunny" : "moon"} size={20} color={isDarkmode ? themeColor.white100 : themeColor.dark} />}
-        rightAction={() => isDarkmode ? setTheme('light') : setTheme('dark')}
       />
 
       <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
@@ -127,7 +133,7 @@ const response = await generateOpenAIResponse(flattenedData);
       {/* OpenAI API에서 생성한 추천 일정 표시 */}
       {openAIResponse && (
   <View style={{ padding: 10, marginTop: 10, backgroundColor: 'white', borderRadius: 10 }}>
-    <Text>오늘의 일정 요약: {openAIResponse}</Text>
+    <Text> {openAIResponse}</Text>
   </View>
 )}
 <Button

@@ -7,18 +7,16 @@ import {
   Image,
 } from "react-native";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, addDoc, doc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 import {
   Layout,
   Text,
   TextInput,
   Button,
-  useTheme,
-  themeColor,
 } from "react-native-rapi-ui";
 
 export default function ({ navigation }) {
-  const { isDarkmode, setTheme } = useTheme();
+
   const auth = getAuth();
   const db = getFirestore();
   const [email, setEmail] = useState("");
@@ -62,7 +60,6 @@ export default function ({ navigation }) {
               flex: 1,
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: isDarkmode ? "#17171E" : themeColor.white100,
             }}
           >
             <Image
@@ -79,7 +76,6 @@ export default function ({ navigation }) {
               flex: 3,
               paddingHorizontal: 20,
               paddingBottom: 20,
-              backgroundColor: isDarkmode ? themeColor.dark : themeColor.white,
             }}
           >
             <Text
@@ -161,7 +157,6 @@ export default function ({ navigation }) {
             >
               <TouchableOpacity
                 onPress={() => {
-                  isDarkmode ? setTheme("light") : setTheme("dark");
                 }}
               >
                 <Text
@@ -171,7 +166,6 @@ export default function ({ navigation }) {
                     marginLeft: 5,
                   }}
                 >
-                  {isDarkmode ? "☀️ light theme" : "🌑 dark theme"}
                 </Text>
               </TouchableOpacity>
             </View>

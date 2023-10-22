@@ -1,14 +1,12 @@
 import React, { useContext } from "react";
-import { initializeApp, getApps } from "firebase/app";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer"; // Import createDrawerNavigator
 import { AuthContext } from "../provider/AuthProvider";
-import firebaseConfig from "../firebaseConfig";
 
 // Main
 import Home from "../screens/Home";
-import SecondScreen from "../screens/SecondScreen";
+import calander from "../screens/calander";
 import openAiScreen from "../screens/openAiScreen"
 
 // Auth screens
@@ -45,7 +43,7 @@ const Main = () => {
       }}
     >
       <MainStack.Screen name="Home" component={Home} />
-      <MainStack.Screen name="SecondScreen" component={SecondScreen} />
+      <MainStack.Screen name="calander" component={calander} />
       <MainStack.Screen name="openAiScreen" component={openAiScreen} />
     </MainStack.Navigator>
   );
@@ -64,7 +62,7 @@ export default () => {
       {user == true && (
         <Drawer.Navigator initialRouteName="Home"> 
           <Drawer.Screen name="Home" component={Main} />
-          <Drawer.Screen name="SecondScreen" component={SecondScreen} />
+          <Drawer.Screen name="calander" component={calander} />
           <Drawer.Screen name="openAiScreen" component={openAiScreen} />
         </Drawer.Navigator>
       )}

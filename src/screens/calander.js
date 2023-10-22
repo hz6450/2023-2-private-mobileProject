@@ -50,6 +50,40 @@ export default function ({ navigation }) {
   };
 
   useEffect(() => {
+    // 컴포넌트가 마운트될 때 실행되는 함수
+    const fetchDataOnMount = async () => {
+      // UID가 설정되어 있는지 확인
+      if (userUID) {
+        // 데이터를 가져오는 함수를 호출
+        await fetchUserData();
+      }
+    };
+  
+    // 사용자의 인증 상태가 변경될 때마다 실행될 함수
+    const handleAuthStateChange = (user) => {
+      if (user) {
+        // 사용자가 로그인한 경우
+        setUserUID(user.uid); // UID 설정
+        fetchDataOnMount(); // 데이터 가져오기
+      } else {
+        // 사용자가 로그아웃한 경우
+        setUserUID(null); // UID 제거
+        setUserData([]); // 사용자 데이터 초기화
+      }
+    };
+  
+    // 인증 상태 변경 리스너를 추가
+    const unsubscribe = onAuthStateChanged(auth, handleAuthStateChange);
+  
+    // 컴포넌트가 언마운트될 때 리스너를 제거하기 위한 정리 함수
+    return () => {
+      unsubscribe();
+    };
+  }, []); // 빈 의존성 배열을 사용하여 컴포넌트가 마운트될 때만 실행되도록 함
+  
+  
+
+  useEffect(() => {
     fetchUserData();
   }, [selectedDate]);
 
@@ -105,8 +139,6 @@ export default function ({ navigation }) {
         middleContent="오늘 할 일"
         leftContent={<Ionicons name="chevron-back" size={20} color={isDarkmode ? themeColor.white100 : themeColor.dark} />}
         leftAction={() => navigation.goBack()}
-        rightContent={<Ionicons name={isDarkmode ? "sunny" : "moon"} size={20} color={isDarkmode ? themeColor.white100 : themeColor.dark} />}
-        rightAction={() => isDarkmode ? setTheme("light") : setTheme("dark")}
       />
 
       <View style={styles.calendarHeader}>
